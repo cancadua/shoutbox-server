@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 class MessageController {
@@ -20,28 +20,26 @@ class MessageController {
 
     @GetMapping("/messages")
     public ResponseEntity<List<Message>> getAll() {
-        System.out.println("asdasd");
         return new ResponseEntity<>(repository.findAllBy(), HttpStatus.OK);
 
     }
-    // end::get-aggregate-root[]
 
     @PostMapping("/message")
-    public Message newMessage(@RequestBody Message newMessage) {
-        return repository.save(newMessage);
+    public ResponseEntity<Message> newMessage(@RequestBody Message newMessage) {
+        System.out.println("asdasd");
+        return new ResponseEntity<>(repository.save(newMessage), HttpStatus.CREATED);
     }
 
-    // Single item
 
     @GetMapping("/messages/{id}")
-    public Message one(@PathVariable Long id) {
+    public Message oneMessage(@PathVariable Long id) {
 
         return repository.findById(id)
                 .orElseThrow(() -> new MessageNotFoundException(id));
     }
 
     @PutMapping("/message/{id}")
-    public Message replaceEmployee(@RequestBody Message newMessage, @PathVariable Long id) {
+    public Message replaceMessage(@RequestBody Message newMessage, @PathVariable Long id) {
 
         return repository.findById(id)
                 .map(Message -> {
@@ -55,7 +53,7 @@ class MessageController {
     }
 
     @DeleteMapping("/message/{id}")
-    public void deleteEmployee(@PathVariable Long id) {
+    public void deleteMessage(@PathVariable Long id) {
         repository.deleteById(id);
     }
 }
